@@ -31,6 +31,15 @@ const SimpleInput = (props) => {
     // }
   }
 
+  const nameInputBlurHandler = () => {
+    setEnteredInputIsTouched(true)
+
+    if(enteredName.trim() === ''){
+      setEnteredInputIsValid(false);
+      return;
+    }
+  }
+
   const formSubmissionHandler = (event) => {
     // ! The javascript default behavior is when submitting a form, it sends a request to the server. so it will refresh the page.
     // ! .... To prevent that default behavior, we use event.preventDefault();
@@ -65,7 +74,10 @@ const SimpleInput = (props) => {
     <form onSubmit={formSubmissionHandler}>
       <div className={nameInputClasses}>
         <label htmlFor='name'>Your Name</label>
-        <input ref={enteredInputRef} type='text' id='name' onChange={nameInputChangeHandler} value={enteredName} />
+        <input ref={enteredInputRef} type='text' id='name'
+         onChange={nameInputChangeHandler} 
+         onBlur={nameInputBlurHandler} // this function will be triggered when the input is blurred(loose focus)
+         value={enteredName} />
         {nameInputIsInvalid && <p className='error-text'>Please enter a name</p>}
       </div>
       <div className="form-actions">
