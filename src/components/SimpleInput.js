@@ -17,7 +17,7 @@ const SimpleInput = (props) => {
   // * useRef
   // ! we read the value when needed it using the useRef
   // ! If we want the value at once, we can use the useRef
-  
+
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
@@ -27,6 +27,9 @@ const SimpleInput = (props) => {
     // ! The javascript default behavior is when submitting a form, it sends a request to the server. so it will refresh the page.
     // ! .... To prevent that default behavior, we use event.preventDefault();
     event.preventDefault();
+    if(enteredName.trim() === ''){
+      return;
+    }
     console.log(enteredName);
     console.log(enteredInputRef.current.value);
 
