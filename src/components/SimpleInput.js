@@ -10,6 +10,15 @@ const SimpleInput = (props) => {
     reset: resetNameInput
   } = useInput( value => value.trim() !== '' );
 
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailInputHasError,
+    valueChangeHandler: emailInputChangeHandler,
+    inputBlurHandler: emailInputBlurHandler,
+    reset: resetEmailInput
+  } = useInput( value => value.includes('@') );
+
   // const [enteredName, setEnteredName] = useState("");
   // const [enteredInputIsTouched, setEnteredInputIsTouched] = useState(false);
   
@@ -47,7 +56,7 @@ const SimpleInput = (props) => {
 
   let formIsValid = false;
   // ! change form input are valid and set form is valid or invalid
-  if (enteredNameIsValid) {
+  if (enteredNameIsValid && enteredEmailIsValid) {
     formIsValid = true;
   }
 
@@ -96,14 +105,20 @@ const SimpleInput = (props) => {
     // setEnteredInputIsTouched(false);
 
     resetNameInput();
+    resetEmailInput();
   };
 
   const nameInputClasses = nameInputHasError
     ? "form-control invalid"
     : "form-control";
 
+  const emailInputClasses = emailInputHasError
+    ? "form-control invalid"
+    : "form-control";
+
   return (
     <form onSubmit={formSubmissionHandler}>
+
       <div className={nameInputClasses}>
         <label htmlFor="name">Your Name</label>
         <input
@@ -118,6 +133,22 @@ const SimpleInput = (props) => {
           <p className="error-text">Please enter a name</p>
         )}
       </div>
+
+      <div className={emailInputClasses}>
+        <label htmlFor="email">Your E-Mail</label>
+
+        <input 
+          type="text" 
+          id="email" 
+          onChange={emailInputChangeHandler}
+          onBlur={emailInputBlurHandler}
+          value={enteredEmail}
+          />
+          {emailInputHasError && (
+            <p className="error-text">Please enter a valid email</p>
+          )}
+      </div>
+      
       <div className="form-actions">
         <button disabled={!formIsValid}>Submit</button>
       </div>
