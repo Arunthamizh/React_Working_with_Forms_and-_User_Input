@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 const SimpleInput = (props) => {
 
   const [enteredName, setEnteredName] = useState('');
+  const [enteredInputIsValid, setEnteredInputIsValid] = useState(true);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const enteredInputRef =  useRef();
 
   //  ! Two approaches to handle the status of the input
@@ -21,15 +23,25 @@ const SimpleInput = (props) => {
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
+    // if(enteredName.trim() === ''){
+    //   setEnteredInputIsValid(false);
+    // } else {
+    //   setEnteredInputIsValid(true);
+    // }
   }
 
   const formSubmissionHandler = (event) => {
     // ! The javascript default behavior is when submitting a form, it sends a request to the server. so it will refresh the page.
     // ! .... To prevent that default behavior, we use event.preventDefault();
     event.preventDefault();
+    
+    setIsFormSubmitted(true);
+
     if(enteredName.trim() === ''){
+      setEnteredInputIsValid(false);
       return;
     }
+    setEnteredInputIsValid(true);
     console.log(enteredName);
     console.log(enteredInputRef.current.value);
 
@@ -41,11 +53,14 @@ const SimpleInput = (props) => {
 
   }
 
+  const nameInputClasses = !enteredInputIsValid ? 'form-control invalid' : 'form-control';
+
   return (
     <form onSubmit={formSubmissionHandler}>
-      <div className='form-control'>
+      <div className={nameInputClasses}>
         <label htmlFor='name'>Your Name</label>
         <input ref={enteredInputRef} type='text' id='name' onChange={nameInputChangeHandler} value={enteredName} />
+        {!enteredInputIsValid && <p className='error-text'>Please enter a name</p>}
       </div>
       <div className="form-actions">
         <button>Submit</button>
