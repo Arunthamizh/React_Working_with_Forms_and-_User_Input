@@ -1,28 +1,47 @@
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 const SimpleInput = (props) => {
   
   const [enteredName, setEnteredName] = useState('');
   // const [enteredInputIsValid, setEnteredInputIsValid] = useState(false);
   const [enteredInputIsTouched, setEnteredInputIsTouched] = useState(false);
   // const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  // const [formIsValid, setFormIsValid] = useState(false);
   // const enteredInputRef =  useRef(); 
   
-  const enteredInputIsValid = enteredName.trim() !== '';
-  const nameInputIsInvalid = !enteredInputIsValid && enteredInputIsTouched;
-
   //  ! Two approaches to handle the status of the input
   // ! 1. Use the useState
   // ! 2. Use the useRef
-
+  
   // * useState
   // ! When we need to track the state of input for every keystroke
   // ! If we want value on every keystroke, we can use useState for instance validation. 
   // ! If want to reset the value, we can use useState
-
+  
   // * useRef
   // ! we read the value when needed it using the useRef
   // ! If we want the value at once, we can use the useRef
+  
+  const enteredInputIsValid = enteredName.trim() !== '';
+  const nameInputIsInvalid = !enteredInputIsValid && enteredInputIsTouched;
+  
+  // * Overall Form Validation
+  // ! the useEffect will have extra rendering cost.
+  // useEffect(() => {
+  //   if (enteredInputIsValid) {
+  //     setFormIsValid(true);
+  //   } else {
+  //     setFormIsValid(false);
+  //   }
+    
+  // }, [enteredInputIsValid])
+
+  let formIsValid = false;
+  // ! change form input are valid and set form is valid or invalid
+  if(enteredInputIsValid){
+    formIsValid = true;
+  }
+
 
 
   const nameInputChangeHandler = (event) => {
@@ -89,7 +108,7 @@ const SimpleInput = (props) => {
         {nameInputIsInvalid && <p className='error-text'>Please enter a name</p>}
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
