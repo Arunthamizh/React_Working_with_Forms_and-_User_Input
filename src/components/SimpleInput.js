@@ -3,8 +3,9 @@ import { useRef, useState } from 'react';
 const SimpleInput = (props) => {
 
   const [enteredName, setEnteredName] = useState('');
-  const [enteredInputIsValid, setEnteredInputIsValid] = useState(true);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [enteredInputIsValid, setEnteredInputIsValid] = useState(false);
+  const [enteredInputIsTouched, setEnteredInputIsTouched] = useState(false);
+  // const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const enteredInputRef =  useRef();
 
   //  ! Two approaches to handle the status of the input
@@ -35,7 +36,8 @@ const SimpleInput = (props) => {
     // ! .... To prevent that default behavior, we use event.preventDefault();
     event.preventDefault();
     
-    setIsFormSubmitted(true);
+    // setIsFormSubmitted(true);
+    setEnteredInputIsTouched(true);
 
     if(enteredName.trim() === ''){
       setEnteredInputIsValid(false);
@@ -53,14 +55,18 @@ const SimpleInput = (props) => {
 
   }
 
-  const nameInputClasses = !enteredInputIsValid ? 'form-control invalid' : 'form-control';
+  const nameInputIsInvalid = !enteredInputIsValid && enteredInputIsTouched;
+
+  const nameInputClasses = nameInputIsInvalid 
+  ? 'form-control invalid' 
+  : 'form-control';
 
   return (
     <form onSubmit={formSubmissionHandler}>
       <div className={nameInputClasses}>
         <label htmlFor='name'>Your Name</label>
         <input ref={enteredInputRef} type='text' id='name' onChange={nameInputChangeHandler} value={enteredName} />
-        {!enteredInputIsValid && <p className='error-text'>Please enter a name</p>}
+        {nameInputIsInvalid && <p className='error-text'>Please enter a name</p>}
       </div>
       <div className="form-actions">
         <button>Submit</button>
