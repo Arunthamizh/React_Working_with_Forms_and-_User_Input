@@ -1,12 +1,15 @@
 
 import { useRef, useState } from 'react';
 const SimpleInput = (props) => {
-
+  
   const [enteredName, setEnteredName] = useState('');
-  const [enteredInputIsValid, setEnteredInputIsValid] = useState(false);
+  // const [enteredInputIsValid, setEnteredInputIsValid] = useState(false);
   const [enteredInputIsTouched, setEnteredInputIsTouched] = useState(false);
   // const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const enteredInputRef =  useRef();
+  // const enteredInputRef =  useRef(); 
+  
+  const enteredInputIsValid = enteredName.trim() !== '';
+  const nameInputIsInvalid = !enteredInputIsValid && enteredInputIsTouched;
 
   //  ! Two approaches to handle the status of the input
   // ! 1. Use the useState
@@ -23,21 +26,28 @@ const SimpleInput = (props) => {
 
 
   const nameInputChangeHandler = (event) => {
-    setEnteredName(event.target.value);
     // if(enteredName.trim() === ''){
     //   setEnteredInputIsValid(false);
     // } else {
     //   setEnteredInputIsValid(true);
+    // }
+    setEnteredName(event.target.value); 
+    // ! The above setEnteredName() will be in the schedule. it will not updated immediately.
+    // ! so that we are using event.target.value
+
+    // if(event.target.value.trim() !== ''){
+    //   setEnteredInputIsValid(true);
+    //   return;
     // }
   }
 
   const nameInputBlurHandler = () => {
     setEnteredInputIsTouched(true)
 
-    if(enteredName.trim() === ''){
-      setEnteredInputIsValid(false);
-      return;
-    }
+    // if(enteredName.trim() === ''){
+    //   setEnteredInputIsValid(false);
+    //   return;
+    // }
   }
 
   const formSubmissionHandler = (event) => {
@@ -48,23 +58,19 @@ const SimpleInput = (props) => {
     // setIsFormSubmitted(true);
     setEnteredInputIsTouched(true);
 
-    if(enteredName.trim() === ''){
-      setEnteredInputIsValid(false);
+    if(!enteredInputIsValid){
       return;
     }
-    setEnteredInputIsValid(true);
-    console.log(enteredName);
-    console.log(enteredInputRef.current.value);
 
     // ! Don`t do this with refs!
     // ! enteredInputRef.current.value = ''; // NOT IDEAL, DON'T MANIPULATE THE DOM
     // ! instead, use state to achieve the same result
 
     setEnteredName('');
+    setEnteredInputIsTouched(false);
 
   }
 
-  const nameInputIsInvalid = !enteredInputIsValid && enteredInputIsTouched;
 
   const nameInputClasses = nameInputIsInvalid 
   ? 'form-control invalid' 
@@ -74,7 +80,9 @@ const SimpleInput = (props) => {
     <form onSubmit={formSubmissionHandler}>
       <div className={nameInputClasses}>
         <label htmlFor='name'>Your Name</label>
-        <input ref={enteredInputRef} type='text' id='name'
+        <input 
+        // ref={enteredInputRef} 
+        type='text' id='name'
          onChange={nameInputChangeHandler} 
          onBlur={nameInputBlurHandler} // this function will be triggered when the input is blurred(loose focus)
          value={enteredName} />
